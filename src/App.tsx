@@ -725,7 +725,7 @@ function App() {
               <div className="absolute -inset-2 rounded-[32px] bg-gradient-to-r from-blue-500/15 via-[#2f7cf6]/20 to-indigo-500/15 blur-xl -z-10" />
               <div className="relative aspect-video w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-[#0b1d35] shadow-2xl shadow-slate-300/60">
                 <iframe
-                  src="https://www.youtube.com/embed/7cEOG0shgXA"
+                  src="https://www.youtube.com/embed/SLl_Ga3ixgg"
                   title="Video Tour Gestionale ASD - Presentazione completa delle funzionalità"
                   className="absolute inset-0 h-full w-full border-0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
