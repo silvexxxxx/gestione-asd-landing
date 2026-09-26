@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gestione-asd-landing.vercel.app/sitemap.xml

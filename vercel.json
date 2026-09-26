@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/(google[a-zA-Z0-9]+\\.html)",
+      "destination": "/$1"
+    },
+    {
+      "source": "/((?!.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
