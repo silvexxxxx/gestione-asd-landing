@@ -593,9 +593,10 @@ function App() {
                 </a>
                 <a
                   href="#video"
-                  className="inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/15 bg-white/5 px-6 py-4 text-sm font-semibold text-white transition hover:bg-white/10"
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#ff0000] px-6 py-4 text-base font-bold text-white shadow-xl shadow-red-600/35 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#e60000] hover:shadow-2xl hover:shadow-red-600/50"
                 >
-                  <Play size={16} fill="currentColor" /> Guarda la video demo
+                  <Play size={18} fill="currentColor" className="transition-transform group-hover:scale-110" />
+                  <span>Guarda la video demo</span>
                 </a>
               </div>
 
