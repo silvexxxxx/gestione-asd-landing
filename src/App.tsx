@@ -281,6 +281,25 @@ function App() {
   const [activeScreenshot, setActiveScreenshot] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  // Counter State
+  const [demoClicks, setDemoClicks] = useState(() => {
+    const saved = localStorage.getItem('demo_clicks_count');
+    return saved ? parseInt(saved, 10) : 711;
+  });
+  const [hasClickedDemo, setHasClickedDemo] = useState(() => {
+    return localStorage.getItem('demo_clicked_by_user') === 'true';
+  });
+
+  const handleDemoClick = () => {
+    if (!hasClickedDemo) {
+      const newCount = demoClicks + 1;
+      setDemoClicks(newCount);
+      setHasClickedDemo(true);
+      localStorage.setItem('demo_clicks_count', newCount.toString());
+      localStorage.setItem('demo_clicked_by_user', 'true');
+    }
+  };
+
   // Contact Modal State
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -537,14 +556,20 @@ function App() {
             >
               Contatti & Demo
             </a>
-            <a
-              href={appUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#2f7cf6] px-3 py-1.5 text-xs lg:text-sm font-semibold text-white shadow-sm shadow-blue-500/25 transition hover:bg-[#5594ff] md:mt-0"
-            >
-              Prova la Demo gratuita <ArrowRight size={14} />
-            </a>
+            <div className="mt-2 flex flex-col items-center md:mt-0 md:items-end">
+              <a
+                href={appUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={handleDemoClick}
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#2f7cf6] px-3 py-1.5 text-xs lg:text-sm font-semibold text-white shadow-sm shadow-blue-500/25 transition hover:bg-[#5594ff]"
+              >
+                Prova la Demo gratuita <ArrowRight size={14} />
+              </a>
+              <span className="mt-1 text-[10px] font-medium text-slate-400">
+                Avviata {demoClicks} volte
+              </span>
+            </div>
           </nav>
 
           <button
@@ -586,6 +611,7 @@ function App() {
                   href={appUrl}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={handleDemoClick}
                   className="group inline-flex items-center justify-center gap-3 rounded-xl bg-[#2f7cf6] px-7 py-4 text-base font-semibold text-white shadow-xl shadow-blue-600/30 transition hover:-translate-y-0.5 hover:bg-[#5594ff]"
                 >
                   Prova la Demo gratuita
@@ -781,6 +807,7 @@ function App() {
                 href={appUrl}
                 target="_blank"
                 rel="noreferrer"
+                onClick={handleDemoClick}
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-4 text-base font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 hover:border-slate-400"
               >
                 <span>Prova subito la Demo Online</span>
@@ -1357,6 +1384,7 @@ function App() {
                     href={appUrl}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={handleDemoClick}
                     className="group flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#2f7cf6] px-6 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-[#5594ff]"
                   >
                     <span>Apri la Demo Gratuita</span>
@@ -1536,15 +1564,21 @@ function App() {
                 <Mail size={15} /> Scrivici direttamente
               </button>
             </div>
-            <a
-              href={appUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-[#2f7cf6] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#5594ff]"
-            >
-              Accedi alla Demo <ArrowRight size={15} />
-            </a>
-            <p className="text-xs text-slate-500">© 2026 Gestionale ASD. Tutti i diritti riservati.</p>
+            <div className="mt-2 flex flex-col sm:items-end">
+              <a
+                href={appUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={handleDemoClick}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2f7cf6] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#5594ff]"
+              >
+                Accedi alla Demo <ArrowRight size={15} />
+              </a>
+              <span className="mt-1.5 text-xs font-medium text-slate-400">
+                Avviata {demoClicks} volte
+              </span>
+            </div>
+            <p className="mt-2 text-xs text-slate-500">© 2026 Gestionale ASD. Tutti i diritti riservati.</p>
           </div>
         </div>
       </footer>
