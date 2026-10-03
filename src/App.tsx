@@ -283,20 +283,51 @@ function App() {
 
   // Counter State
   const [demoClicks, setDemoClicks] = useState(() => {
-    const saved = localStorage.getItem('demo_clicks_count');
-    return saved ? parseInt(saved, 10) : 711;
+    try {
+      const saved = localStorage.getItem('demo_clicks_count');
+      return saved ? parseInt(saved, 10) : 711;
+    } catch {
+      return 711;
+    }
   });
   const [hasClickedDemo, setHasClickedDemo] = useState(() => {
-    return localStorage.getItem('demo_clicked_by_user') === 'true';
+    try {
+      return localStorage.getItem('demo_clicked_by_user') === 'true';
+    } catch {
+      return false;
+    }
   });
 
   const handleDemoClick = () => {
-    if (!hasClickedDemo) {
-      const newCount = demoClicks + 1;
-      setDemoClicks(newCount);
-      setHasClickedDemo(true);
-      localStorage.setItem('demo_clicks_count', newCount.toString());
-      localStorage.setItem('demo_clicked_by_user', 'true');
+    // Differisci l'aggiornamento di stato per non interferire con il click nativo
+    setTimeout(() => {
+      try {
+        if (!hasClickedDemo) {
+          const newCount = demoClicks + 1;
+          setDemoClicks(newCount);
+          setHasClickedDemo(true);
+          localStorage.setItem('demo_clicks_count', newCount.toString());
+          localStorage.setItem('demo_clicked_by_user', 'true');
+        }
+      } catch {
+        // Nessun blocco se localStorage è limitato o disabilitato
+      }
+    }, 200);
+  };
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      const headerOffset = 70;
+      const elementPosition = targetElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+      window.history.pushState(null, '', `#${targetId}`);
     }
   };
 
@@ -403,7 +434,12 @@ function App() {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      let data: any = {};
+      try {
+        data = await response.json();
+      } catch {
+        data = { success: false, message: 'Risposta non valida dal server di invio.' };
+      }
 
       if (response.status === 200 && data.success) {
         setFormStatus('success');
@@ -455,7 +491,12 @@ function App() {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      let data: any = {};
+      try {
+        data = await response.json();
+      } catch {
+        data = { success: false, message: 'Risposta non valida dal server di invio.' };
+      }
 
       if (response.status === 200 && data.success) {
         setPageFormStatus('success');
@@ -477,11 +518,16 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen overflow-hidden bg-[#f7f9fc] text-slate-900">
+    <div className="min-h-screen overflow-x-clip bg-[#f7f9fc] text-slate-900">
       {/* Header */}
       <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#0b1d35]/90 backdrop-blur-xl">
         <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <a href="#top" className="flex shrink-0 items-center gap-2.5" aria-label="Gestionale ASD home">
+          <a
+            href="#top"
+            onClick={(e) => scrollToSection(e, 'top')}
+            className="flex shrink-0 items-center gap-2.5 cursor-pointer"
+            aria-label="Gestionale ASD home"
+          >
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#2f7cf6] text-white shadow-md shadow-blue-500/25">
               <ClipboardList size={18} />
             </div>
@@ -502,56 +548,80 @@ function App() {
           >
             <a
               href="#video"
-              onClick={() => setMenuOpen(false)}
-              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white"
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'video');
+              }}
+              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
             >
               Video Tour
             </a>
             <a
               href="#pilastri"
-              onClick={() => setMenuOpen(false)}
-              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white"
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'pilastri');
+              }}
+              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
             >
               I 4 Pilastri
             </a>
             <a
               href="#confronto"
-              onClick={() => setMenuOpen(false)}
-              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white"
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'confronto');
+              }}
+              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
             >
               Confronto
             </a>
             <a
               href="#per-chi-e"
-              onClick={() => setMenuOpen(false)}
-              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white"
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'per-chi-e');
+              }}
+              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
             >
               Per chi è
             </a>
             <a
               href="#moduli"
-              onClick={() => setMenuOpen(false)}
-              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white"
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'moduli');
+              }}
+              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
             >
               Riforma dello Sport
             </a>
             <a
               href="#schermate"
-              onClick={() => setMenuOpen(false)}
-              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white"
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'schermate');
+              }}
+              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
             >
               Schermate
             </a>
             <a
               href="#faq"
-              onClick={() => setMenuOpen(false)}
-              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white"
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'faq');
+              }}
+              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
             >
               FAQ
             </a>
             <a
               href="#richiesta-demo"
-              onClick={() => setMenuOpen(false)}
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'richiesta-demo');
+              }}
               className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
             >
               Contatti & Demo
@@ -560,7 +630,7 @@ function App() {
               <a
                 href={appUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 onClick={handleDemoClick}
                 className="inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#2f7cf6] px-3 py-1.5 text-xs lg:text-sm font-semibold text-white shadow-sm shadow-blue-500/25 transition hover:bg-[#5594ff]"
               >
@@ -582,7 +652,7 @@ function App() {
         </div>
       </header>
 
-      <main id="top">
+      <main id="top" className="scroll-mt-16 sm:scroll-mt-20">
         {/* 1. HERO SECTION & PROPOSTA DI VALORE */}
         <section className="relative isolate overflow-hidden bg-[#0b1d35] pb-16 pt-24 text-white sm:pb-24 sm:pt-28">
           <div className="hero-grid absolute inset-0 -z-10 opacity-60" />
@@ -610,16 +680,17 @@ function App() {
                 <a
                   href={appUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   onClick={handleDemoClick}
-                  className="group inline-flex items-center justify-center gap-3 rounded-xl bg-[#2f7cf6] px-7 py-4 text-base font-semibold text-white shadow-xl shadow-blue-600/30 transition hover:-translate-y-0.5 hover:bg-[#5594ff]"
+                  className="group inline-flex items-center justify-center gap-3 rounded-xl bg-[#2f7cf6] px-7 py-4 text-base font-semibold text-white shadow-xl shadow-blue-600/30 transition hover:-translate-y-0.5 hover:bg-[#5594ff] cursor-pointer"
                 >
-                  Prova la Demo gratuita
+                  <span>Prova la Demo gratuita</span>
                   <ArrowRight size={18} className="transition group-hover:translate-x-1" />
                 </a>
                 <a
                   href="#video"
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#ff0000] px-6 py-4 text-base font-bold text-white shadow-xl shadow-red-600/35 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#e60000] hover:shadow-2xl hover:shadow-red-600/50"
+                  onClick={(e) => scrollToSection(e, 'video')}
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#ff0000] px-6 py-4 text-base font-bold text-white shadow-xl shadow-red-600/35 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#e60000] hover:shadow-2xl hover:shadow-red-600/50 cursor-pointer"
                 >
                   <Play size={18} fill="currentColor" className="transition-transform group-hover:scale-110" />
                   <span>Guarda la video demo</span>
@@ -735,7 +806,7 @@ function App() {
         </section>
 
         {/* NUOVA SEZIONE: VIDEO PRESENTAZIONE COMPLETA DEL SOFTWARE */}
-        <section id="video" className="relative bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 border-b border-slate-100">
+        <section id="video" className="scroll-mt-16 sm:scroll-mt-20 relative bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 border-b border-slate-100">
           <div className="mx-auto max-w-7xl">
             {/* 1. Titolo e Sottotitolo Chiari e Accattivanti */}
             <div className="mx-auto max-w-3xl text-center">
@@ -798,7 +869,8 @@ function App() {
             <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
                 href="#richiesta-demo"
-                className="group inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#2f7cf6] px-8 py-4 text-base font-semibold text-white shadow-xl shadow-blue-500/25 transition hover:bg-[#5594ff] hover:-translate-y-0.5"
+                onClick={(e) => scrollToSection(e, 'richiesta-demo')}
+                className="group inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#2f7cf6] px-8 py-4 text-base font-semibold text-white shadow-xl shadow-blue-500/25 transition hover:bg-[#5594ff] hover:-translate-y-0.5 cursor-pointer"
               >
                 <span>Richiedi una Demo o Maggiori Informazioni</span>
                 <ArrowRight size={18} className="transition group-hover:translate-x-1" />
@@ -806,9 +878,9 @@ function App() {
               <a
                 href={appUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 onClick={handleDemoClick}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-4 text-base font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 hover:border-slate-400"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-4 text-base font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 hover:border-slate-400 cursor-pointer"
               >
                 <span>Prova subito la Demo Online</span>
                 <ArrowRight size={16} />
@@ -818,7 +890,7 @@ function App() {
         </section>
 
         {/* 2. I 4 PILASTRI CHIAVE */}
-        <section id="pilastri" className="relative bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="pilastri" className="scroll-mt-16 sm:scroll-mt-20 relative bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center">
               <p className="section-kicker">Trasparenza & Efficienza Operativa</p>
@@ -855,7 +927,7 @@ function App() {
         </section>
 
         {/* 3. SEZIONE COMPARATIVA */}
-        <section id="confronto" className="bg-[#f1f5fa] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="confronto" className="scroll-mt-16 sm:scroll-mt-20 bg-[#f1f5fa] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center">
               <p className="section-kicker">Confronto Trasparente</p>
@@ -922,10 +994,12 @@ function App() {
                 <a
                   href={appUrl}
                   target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-[#2f7cf6] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#5594ff] sm:mt-0"
+                  rel="noopener noreferrer"
+                  onClick={handleDemoClick}
+                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-[#2f7cf6] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#5594ff] sm:mt-0 cursor-pointer"
                 >
-                  Apri la Demo gratuita <ArrowRight size={14} />
+                  <span>Apri la Demo gratuita</span>
+                  <ArrowRight size={14} />
                 </a>
               </div>
             </div>
@@ -933,7 +1007,7 @@ function App() {
         </section>
 
         {/* 4. SEZIONE "PER CHI SIAMO (E PER CHI NO)" - CON IMMAGINE FOTOGRAFICA SX/DX */}
-        <section id="per-chi-e" className="bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="per-chi-e" className="scroll-mt-16 sm:scroll-mt-20 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
               {/* Colonna SX: Testo pulito e sobrio */}
@@ -1010,7 +1084,7 @@ function App() {
         </section>
 
         {/* 5. MODULI CHIAVE & RIFORMA DELLO SPORT */}
-        <section id="moduli" className="bg-[#f1f5fa] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="moduli" className="scroll-mt-16 sm:scroll-mt-20 bg-[#f1f5fa] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center">
               <p className="section-kicker">Conformità & Semplicità</p>
@@ -1079,7 +1153,7 @@ function App() {
         </section>
 
         {/* 7. CAROSELLO INTERATTIVO SCHERMATE & SECONDA IMMAGINE FOTOGRAFICA */}
-        <section id="schermate" className="overflow-hidden bg-[#f7f9fc] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <section id="schermate" className="scroll-mt-16 sm:scroll-mt-20 overflow-hidden bg-[#f7f9fc] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
           <div className="mx-auto max-w-7xl">
             {/* Blocco Introduttivo con Seconda Immagine Fotografica */}
             <div className="mb-8 sm:mb-10 grid items-center gap-8 lg:grid-cols-[1.1fr_.9fr]">
@@ -1274,7 +1348,7 @@ function App() {
         </section>
 
         {/* 8. SEZIONE FAQ (DOMANDE FREQUENTI) */}
-        <section id="faq" className="bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="faq" className="scroll-mt-16 sm:scroll-mt-20 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-4xl">
             <div className="text-center">
               <p className="section-kicker">Chiarezza Senza Sorprese</p>
@@ -1322,6 +1396,7 @@ function App() {
               Hai un dubbio specifico per la tua associazione?{' '}
               <a
                 href="#richiesta-demo"
+                onClick={(e) => scrollToSection(e, 'richiesta-demo')}
                 className="font-bold text-[#2f7cf6] underline hover:text-blue-800 transition cursor-pointer inline-block"
               >
                 Scrivici qui
@@ -1332,7 +1407,7 @@ function App() {
         </section>
 
         {/* 9. SEZIONE RICHIESTA DEMO & FORM CONTATTI (CON SCROLL FLUIDO) */}
-        <section id="richiesta-demo" className="bg-[#eaf2fc] px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
+        <section id="richiesta-demo" className="scroll-mt-16 sm:scroll-mt-20 bg-[#eaf2fc] px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center mb-12">
               <p className="section-kicker">Richiesta Demo & Contatto Diretto</p>
@@ -1383,9 +1458,9 @@ function App() {
                   <a
                     href={appUrl}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     onClick={handleDemoClick}
-                    className="group flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#2f7cf6] px-6 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-[#5594ff]"
+                    className="group flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#2f7cf6] px-6 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-[#5594ff] cursor-pointer"
                   >
                     <span>Apri la Demo Gratuita</span>
                     <ArrowRight size={18} className="transition group-hover:translate-x-1" />
@@ -1536,10 +1611,14 @@ function App() {
       </main>
 
       {/* FOOTER */}
-      <footer id="contatti" className="bg-[#08182c] px-5 py-12 text-white sm:px-8 lg:px-10">
+      <footer id="contatti" className="scroll-mt-16 sm:scroll-mt-20 bg-[#08182c] px-5 py-12 text-white sm:px-8 lg:px-10">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 sm:flex-row sm:items-start">
           <div>
-            <a href="#top" className="flex items-center gap-3">
+            <a
+              href="#top"
+              onClick={(e) => scrollToSection(e, 'top')}
+              className="flex items-center gap-3 cursor-pointer"
+            >
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#2f7cf6]">
                 <ClipboardList size={18} />
               </div>
@@ -1568,11 +1647,12 @@ function App() {
               <a
                 href={appUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 onClick={handleDemoClick}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2f7cf6] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#5594ff]"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2f7cf6] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#5594ff] cursor-pointer"
               >
-                Accedi alla Demo <ArrowRight size={15} />
+                <span>Accedi alla Demo</span>
+                <ArrowRight size={15} />
               </a>
               <span className="mt-1.5 text-xs font-medium text-slate-400">
                 Avviata {demoClicks} volte
