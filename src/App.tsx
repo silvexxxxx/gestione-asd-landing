@@ -298,21 +298,29 @@ function App() {
     }
   });
 
-  const handleDemoClick = () => {
-    // Differisci l'aggiornamento di stato per non interferire con il click nativo
-    setTimeout(() => {
-      try {
-        if (!hasClickedDemo) {
-          const newCount = demoClicks + 1;
-          setDemoClicks(newCount);
-          setHasClickedDemo(true);
-          localStorage.setItem('demo_clicks_count', newCount.toString());
-          localStorage.setItem('demo_clicked_by_user', 'true');
-        }
-      } catch {
-        // Nessun blocco se localStorage è limitato o disabilitato
+  const handleOpenDemo = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Lascia fare al browser nativo se si preme un modificatore per apertura manuale (Ctrl/Cmd/Shift/rotellina)
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+      return;
+    }
+
+    e.preventDefault();
+
+    // Incrementa contatore senza rischiare errori da storage
+    try {
+      if (!hasClickedDemo) {
+        const newCount = demoClicks + 1;
+        setDemoClicks(newCount);
+        setHasClickedDemo(true);
+        localStorage.setItem('demo_clicks_count', newCount.toString());
+        localStorage.setItem('demo_clicked_by_user', 'true');
       }
-    }, 200);
+    } catch {
+      // Ignora restrizioni di memorizzazione
+    }
+
+    // Apertura affidabile in nuova scheda garantita da click utente
+    window.open(appUrl, '_blank');
   };
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -631,10 +639,11 @@ function App() {
                 href={appUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={handleDemoClick}
-                className="inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#2f7cf6] px-3 py-1.5 text-xs lg:text-sm font-semibold text-white shadow-sm shadow-blue-500/25 transition hover:bg-[#5594ff]"
+                onClick={handleOpenDemo}
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#2f7cf6] px-3 py-1.5 text-xs lg:text-sm font-semibold text-white shadow-sm shadow-blue-500/25 transition hover:bg-[#5594ff] cursor-pointer"
               >
-                Prova la Demo gratuita <ArrowRight size={14} />
+                <span className="pointer-events-none">Prova la Demo gratuita</span>
+                <ArrowRight size={14} className="pointer-events-none" />
               </a>
               <span className="mt-1 text-[10px] font-medium text-slate-400">
                 Avviata {demoClicks} volte
@@ -681,11 +690,11 @@ function App() {
                   href={appUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={handleDemoClick}
+                  onClick={handleOpenDemo}
                   className="group inline-flex items-center justify-center gap-3 rounded-xl bg-[#2f7cf6] px-7 py-4 text-base font-semibold text-white shadow-xl shadow-blue-600/30 transition hover:-translate-y-0.5 hover:bg-[#5594ff] cursor-pointer"
                 >
-                  <span>Prova la Demo gratuita</span>
-                  <ArrowRight size={18} className="transition group-hover:translate-x-1" />
+                  <span className="pointer-events-none">Prova la Demo gratuita</span>
+                  <ArrowRight size={18} className="transition group-hover:translate-x-1 pointer-events-none" />
                 </a>
                 <a
                   href="#video"
@@ -879,11 +888,11 @@ function App() {
                 href={appUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={handleDemoClick}
+                onClick={handleOpenDemo}
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-4 text-base font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 hover:border-slate-400 cursor-pointer"
               >
-                <span>Prova subito la Demo Online</span>
-                <ArrowRight size={16} />
+                <span className="pointer-events-none">Prova subito la Demo Online</span>
+                <ArrowRight size={16} className="pointer-events-none" />
               </a>
             </div>
           </div>
@@ -995,11 +1004,11 @@ function App() {
                   href={appUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={handleDemoClick}
+                  onClick={handleOpenDemo}
                   className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-[#2f7cf6] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#5594ff] sm:mt-0 cursor-pointer"
                 >
-                  <span>Apri la Demo gratuita</span>
-                  <ArrowRight size={14} />
+                  <span className="pointer-events-none">Apri la Demo gratuita</span>
+                  <ArrowRight size={14} className="pointer-events-none" />
                 </a>
               </div>
             </div>
@@ -1459,11 +1468,11 @@ function App() {
                     href={appUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={handleDemoClick}
+                    onClick={handleOpenDemo}
                     className="group flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#2f7cf6] px-6 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-[#5594ff] cursor-pointer"
                   >
-                    <span>Apri la Demo Gratuita</span>
-                    <ArrowRight size={18} className="transition group-hover:translate-x-1" />
+                    <span className="pointer-events-none">Apri la Demo Gratuita</span>
+                    <ArrowRight size={18} className="transition group-hover:translate-x-1 pointer-events-none" />
                   </a>
                   <p className="mt-2 text-center text-xs text-slate-400">
                     Operativo in 2 minuti • Nessuna installazione richiesta
@@ -1648,11 +1657,11 @@ function App() {
                 href={appUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={handleDemoClick}
+                onClick={handleOpenDemo}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2f7cf6] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#5594ff] cursor-pointer"
               >
-                <span>Accedi alla Demo</span>
-                <ArrowRight size={15} />
+                <span className="pointer-events-none">Accedi alla Demo</span>
+                <ArrowRight size={15} className="pointer-events-none" />
               </a>
               <span className="mt-1.5 text-xs font-medium text-slate-400">
                 Avviata {demoClicks} volte
