@@ -286,23 +286,7 @@ function App() {
   const [activeScreenshot, setActiveScreenshot] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // Counter State
-  const [demoClicks, setDemoClicks] = useState(() => {
-    try {
-      const saved = localStorage.getItem('demo_clicks_count');
-      return saved ? parseInt(saved, 10) : 711;
-    } catch {
-      return 711;
-    }
-  });
-  const [hasClickedDemo, setHasClickedDemo] = useState(() => {
-    try {
-      return localStorage.getItem('demo_clicked_by_user') === 'true';
-    } catch {
-      return false;
-    }
-  });
-
+  // Counter State rimosso su richiesta
   const handleOpenDemo = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Lascia fare al browser nativo se si preme un modificatore per apertura manuale (Ctrl/Cmd/Shift/rotellina)
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
@@ -310,19 +294,6 @@ function App() {
     }
 
     e.preventDefault();
-
-    // Incrementa contatore senza rischiare errori da storage
-    try {
-      if (!hasClickedDemo) {
-        const newCount = demoClicks + 1;
-        setDemoClicks(newCount);
-        setHasClickedDemo(true);
-        localStorage.setItem('demo_clicks_count', newCount.toString());
-        localStorage.setItem('demo_clicked_by_user', 'true');
-      }
-    } catch {
-      // Ignora restrizioni di memorizzazione
-    }
 
     // Apertura affidabile in nuova scheda garantita da click utente
     window.open(appUrl, '_blank');
@@ -645,7 +616,7 @@ function App() {
             >
               Contatti & Demo
             </a>
-            <div className="mt-2 flex flex-col items-center md:mt-0 md:items-end">
+            <div className="mt-2 flex items-center md:mt-0">
               <a
                 href={appUrl}
                 target="_blank"
@@ -656,9 +627,6 @@ function App() {
                 <span className="pointer-events-none">Prova la Demo gratuita</span>
                 <ArrowRight size={14} className="pointer-events-none" />
               </a>
-              <span className="mt-1 text-[10px] font-medium text-slate-400">
-                Avviata {demoClicks} volte
-              </span>
             </div>
           </nav>
 
@@ -1692,9 +1660,6 @@ function App() {
                 <span className="pointer-events-none">Accedi alla Demo</span>
                 <ArrowRight size={15} className="pointer-events-none" />
               </a>
-              <span className="mt-1.5 text-xs font-medium text-slate-400">
-                Avviata {demoClicks} volte
-              </span>
             </div>
             <p className="mt-2 text-xs text-slate-500">© 2026 Gestionale ASD. Tutti i diritti riservati.</p>
           </div>
