@@ -178,11 +178,11 @@ const pillars = [
   },
   {
     icon: Coins,
-    tag: 'Convenienza estrema',
-    title: 'Prezzo trasparente: 100€ all’anno',
+    tag: 'Pagamento Unico a Vita',
+    title: '100€ una tantum, zero canoni per sempre',
     description:
-      'Nessun canone da centinaia di euro, nessun costo nascosto o legato al numero di tesserati. Si ammortizza con appena 1 o 2 iscrizioni.',
-    highlight: 'Tutto incluso, nessun extra',
+      'Dimentica i canoni ricorrenti da centinaia di euro all’anno. Lo compri una sola volta all’attivazione ed è tuo per sempre, senza rinnovi o costi di mantenimento.',
+    highlight: 'Nessun canone di rinnovo',
   },
   {
     icon: HeartHandshake,
@@ -196,9 +196,9 @@ const pillars = [
 
 const comparisons = [
   {
-    feature: 'Costo annuale',
-    traditional: '400€ - 700€+/anno con rinnovi continui e rincari imprevisti',
-    ourApp: 'Solo 100€/anno trasparente, prezzo bloccato e zero sorprese',
+    feature: 'Modello economico',
+    traditional: 'Abbonamento da 400€ - 700€ ogni anno con rinnovi obbligatori (oltre 2.500€ in 4 anni!)',
+    ourApp: '100€ UNA TANTUM per sempre. Zero rinnovi, zero abbonamenti ricorrenti',
   },
   {
     feature: 'Operatività senza rete',
@@ -239,9 +239,14 @@ const faqs = [
       'Sì, condividendo la cartella dati su Google Drive con i collaboratori. Puoi consultare la cassa o aggiornare un’anagrafica da casa sul tuo portatile e ritrovare tutto allineato sul PC del bancone.',
   },
   {
-    question: 'Cosa include il canone di 100€/anno?',
+    question: 'Cosa include il pagamento unico di 100€ una tantum?',
     answer:
-      'Include l’accesso completo a tutti i moduli senza limiti sul numero di soci o tesserati, gli aggiornamenti normativi per la conformità alla Riforma dello Sport e le nuove funzionalità sviluppate regolarmente sui suggerimenti della community.',
+      'Include la licenza d’uso permanente a vita di tutti i moduli senza limiti sul numero di soci, tesserati o ricevute emesse. Non ci sono canoni annuali di rinnovo: lo compri una volta ed è tuo per sempre, con piena conformità alla Riforma dello Sport e salvataggio locale o sul tuo Google Drive.',
+  },
+  {
+    question: 'Ci saranno canoni o costi negli anni successivi?',
+    answer:
+      'No, assolutamente nessuno. Il modello è rigorosamente una tantum: acquisti la licenza una sola volta a 100€ e continui a utilizzarla per sempre senza alcun canone periodico, abbonamento o costo nascosto.',
   },
 ];
 
@@ -327,7 +332,7 @@ function App() {
     e.preventDefault();
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
-      const headerOffset = 70;
+      const headerOffset = 95;
       const elementPosition = targetElement.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -528,7 +533,13 @@ function App() {
   return (
     <div className="min-h-screen overflow-x-clip bg-[#f7f9fc] text-slate-900">
       {/* Header */}
-      <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#0b1d35]/90 backdrop-blur-xl">
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#0b1d35]/95 backdrop-blur-xl">
+        {/* Top Notification Bar Promo */}
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 px-3 py-1.5 text-center text-[11px] sm:text-xs font-bold text-white shadow-sm flex items-center justify-center gap-1.5">
+          <span className="inline-block animate-pulse">🔥</span>
+          <span><strong>OFFERTA SPECIALE:</strong> 100€ UNA TANTUM per sempre • Addio canoni e abbonamenti annuali!</span>
+        </div>
+
         <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <a
             href="#top"
@@ -544,7 +555,7 @@ function App() {
                 Gestionale ASD
               </span>
               <span className="text-[10px] text-blue-300 font-normal hidden sm:block leading-none mt-0.5">
-                100€/anno • Trasparenza al desk
+                100€ una tantum • Tuo per sempre
               </span>
             </div>
           </a>
@@ -552,7 +563,7 @@ function App() {
           <nav
             className={`${
               menuOpen ? 'flex' : 'hidden'
-            } absolute left-4 right-4 top-14 sm:top-16 flex-col gap-1 rounded-2xl border border-white/10 bg-[#102844] p-4 shadow-2xl md:static md:flex md:flex-row md:flex-nowrap md:items-center md:gap-2.5 lg:gap-3.5 xl:gap-4 md:border-0 md:bg-transparent md:p-0 md:shadow-none`}
+            } absolute left-4 right-4 top-full mt-2 flex-col gap-1 rounded-2xl border border-white/10 bg-[#102844] p-4 shadow-2xl md:static md:flex md:flex-row md:flex-nowrap md:items-center md:gap-2.5 lg:gap-3.5 xl:gap-4 md:border-0 md:bg-transparent md:p-0 md:shadow-none`}
           >
             <a
               href="#video"
@@ -661,18 +672,18 @@ function App() {
         </div>
       </header>
 
-      <main id="top" className="scroll-mt-16 sm:scroll-mt-20">
+      <main id="top" className="scroll-mt-24 sm:scroll-mt-28">
         {/* 1. HERO SECTION & PROPOSTA DI VALORE */}
-        <section className="relative isolate overflow-hidden bg-[#0b1d35] pb-16 pt-24 text-white sm:pb-24 sm:pt-28">
+        <section className="relative isolate overflow-hidden bg-[#0b1d35] pb-16 pt-28 text-white sm:pb-24 sm:pt-36">
           <div className="hero-grid absolute inset-0 -z-10 opacity-60" />
           <div className="absolute -right-40 top-10 -z-10 h-[460px] w-[460px] rounded-full bg-[#2f7cf6]/20 blur-3xl" />
           <div className="absolute -left-40 bottom-10 -z-10 h-[400px] w-[400px] rounded-full bg-[#2f7cf6]/15 blur-3xl" />
 
           <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_.95fr] lg:gap-12 lg:px-10">
             <div className="max-w-2xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/25 bg-blue-500/10 px-4 py-2 text-xs font-semibold text-blue-200">
-                <Sparkles size={14} className="text-[#65a2ff]" />
-                Trasparenza totale • Senza canoni gonfiati da centinaia di euro
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-rose-500/15 px-4 py-2 text-xs font-bold text-amber-300 shadow-sm shadow-amber-500/10">
+                <Zap size={14} className="text-amber-400 fill-amber-400 shrink-0" />
+                <span>PREZZO BLOCCATO • 100€ UNA TANTUM A VITA (ZERO CANONI)</span>
               </div>
 
               <h1 className="max-w-xl text-4xl font-bold leading-[1.08] tracking-[-0.035em] sm:text-5xl lg:text-[62px]">
@@ -682,7 +693,7 @@ function App() {
 
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Lavora al desk anche senza internet, sincronizza su più dispositivi con il tuo Google Drive e tieni
-                cassa e ricevute sempre in regola. A soli <strong>100€ all'anno</strong>.
+                cassa e ricevute sempre in regola. A soli <strong>100€ una tantum</strong>: zero abbonamenti, il gestionale è tuo per sempre.
               </p>
 
               <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -777,7 +788,7 @@ function App() {
                   <div className="col-span-2 rounded-xl bg-[#172f4c] p-4">
                     <div className="mb-3 flex justify-between text-xs text-slate-300">
                       <span>Cassa & Prima Nota in tempo reale</span>
-                      <span className="text-[#68a5ff] font-semibold">100€/anno</span>
+                      <span className="text-[#68a5ff] font-semibold">100€ una tantum</span>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-[11px] text-slate-300">
@@ -806,8 +817,8 @@ function App() {
                   <CircleCheck size={20} />
                 </div>
                 <div>
-                  <div className="text-xs font-bold">Desk reattivo a 100€/anno</div>
-                  <div className="mt-0.5 text-[10px] text-slate-500">Nessuna attesa, nessun canone nascosto</div>
+                  <div className="text-xs font-bold">Licenza a vita: 100€ una tantum</div>
+                  <div className="mt-0.5 text-[10px] text-slate-500">Nessun canone annuale, per sempre tuo</div>
                 </div>
               </div>
             </div>
@@ -815,7 +826,7 @@ function App() {
         </section>
 
         {/* NUOVA SEZIONE: VIDEO PRESENTAZIONE COMPLETA DEL SOFTWARE */}
-        <section id="video" className="scroll-mt-16 sm:scroll-mt-20 relative bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 border-b border-slate-100">
+        <section id="video" className="scroll-mt-24 sm:scroll-mt-28 relative bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 border-b border-slate-100">
           <div className="mx-auto max-w-7xl">
             {/* 1. Titolo e Sottotitolo Chiari e Accattivanti */}
             <div className="mx-auto max-w-3xl text-center">
@@ -899,7 +910,7 @@ function App() {
         </section>
 
         {/* 2. I 4 PILASTRI CHIAVE */}
-        <section id="pilastri" className="scroll-mt-16 sm:scroll-mt-20 relative bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="pilastri" className="scroll-mt-24 sm:scroll-mt-28 relative bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center">
               <p className="section-kicker">Trasparenza & Efficienza Operativa</p>
@@ -936,7 +947,7 @@ function App() {
         </section>
 
         {/* 3. SEZIONE COMPARATIVA */}
-        <section id="confronto" className="scroll-mt-16 sm:scroll-mt-20 bg-[#f1f5fa] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="confronto" className="scroll-mt-24 sm:scroll-mt-28 bg-[#f1f5fa] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center">
               <p className="section-kicker">Confronto Trasparente</p>
@@ -1016,7 +1027,7 @@ function App() {
         </section>
 
         {/* 4. SEZIONE "PER CHI SIAMO (E PER CHI NO)" - CON IMMAGINE FOTOGRAFICA SX/DX */}
-        <section id="per-chi-e" className="scroll-mt-16 sm:scroll-mt-20 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="per-chi-e" className="scroll-mt-24 sm:scroll-mt-28 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
               {/* Colonna SX: Testo pulito e sobrio */}
@@ -1054,7 +1065,7 @@ function App() {
                     </h3>
                     <p className="mt-2 text-sm leading-relaxed text-slate-700">
                       Se desideri gestire anagrafiche soci, scadenze dei certificati medici, prima nota cassa/banca e
-                      ricevute non fiscali con numerazione a norma in modo <strong>fulmineo, senza stress e a soli 100€ all'anno</strong>.
+                      ricevute non fiscali con numerazione a norma in modo <strong>fulmineo, senza stress e a soli 100€ una tantum, tuo per sempre</strong>.
                     </p>
                   </div>
                 </div>
@@ -1093,7 +1104,7 @@ function App() {
         </section>
 
         {/* 5. MODULI CHIAVE & RIFORMA DELLO SPORT */}
-        <section id="moduli" className="scroll-mt-16 sm:scroll-mt-20 bg-[#f1f5fa] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="moduli" className="scroll-mt-24 sm:scroll-mt-28 bg-[#f1f5fa] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center">
               <p className="section-kicker">Conformità & Semplicità</p>
@@ -1121,7 +1132,7 @@ function App() {
                     <p className="mt-3 text-sm leading-relaxed text-slate-500">{description}</p>
                   </div>
                   <div className="mt-6 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-400">
-                    <Check size={14} className="text-[#2f7cf6]" /> Inclusa nel canone 100€
+                    <Check size={14} className="text-[#2f7cf6]" /> Incluso: 100€ una tantum a vita
                   </div>
                 </article>
               ))}
@@ -1162,7 +1173,7 @@ function App() {
         </section>
 
         {/* 7. CAROSELLO INTERATTIVO SCHERMATE & SECONDA IMMAGINE FOTOGRAFICA */}
-        <section id="schermate" className="scroll-mt-16 sm:scroll-mt-20 overflow-hidden bg-[#f7f9fc] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <section id="schermate" className="scroll-mt-24 sm:scroll-mt-28 overflow-hidden bg-[#f7f9fc] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
           <div className="mx-auto max-w-7xl">
             {/* Blocco Introduttivo con Seconda Immagine Fotografica */}
             <div className="mb-8 sm:mb-10 grid items-center gap-8 lg:grid-cols-[1.1fr_.9fr]">
@@ -1357,7 +1368,7 @@ function App() {
         </section>
 
         {/* 8. SEZIONE FAQ (DOMANDE FREQUENTI) */}
-        <section id="faq" className="scroll-mt-16 sm:scroll-mt-20 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
+        <section id="faq" className="scroll-mt-24 sm:scroll-mt-28 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-4xl">
             <div className="text-center">
               <p className="section-kicker">Chiarezza Senza Sorprese</p>
@@ -1416,7 +1427,7 @@ function App() {
         </section>
 
         {/* 9. SEZIONE RICHIESTA DEMO & FORM CONTATTI (CON SCROLL FLUIDO) */}
-        <section id="richiesta-demo" className="scroll-mt-16 sm:scroll-mt-20 bg-[#eaf2fc] px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
+        <section id="richiesta-demo" className="scroll-mt-24 sm:scroll-mt-28 bg-[#eaf2fc] px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center mb-12">
               <p className="section-kicker">Richiesta Demo & Contatto Diretto</p>
@@ -1431,8 +1442,8 @@ function App() {
               {/* Box Demo Immediata */}
               <div className="rounded-3xl border border-slate-200/90 bg-[#0b1d35] p-8 text-white shadow-xl flex flex-col justify-between">
                 <div>
-                  <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#68a5ff] mb-4">
-                    Accesso Immediato • Zero Attese
+                  <div className="inline-flex items-center gap-2 rounded-full bg-amber-500/20 border border-amber-400/30 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-amber-300 mb-4">
+                    🔥 Offerta Speciale • Licenza a Vita
                   </div>
                   <h3 className="text-2xl font-bold text-white leading-snug">
                     Prova subito la Demo Operativa nel browser
@@ -1441,7 +1452,19 @@ function App() {
                     Esplora tutte le schermate, aggiungi soci fittizi, emetti ricevute di prova e verifica tu stesso l'estrema velocità e chiarezza dell'interfaccia.
                   </p>
 
-                  <div className="mt-8 space-y-3.5">
+                  {/* Riquadro Prezzo Promozionale Una Tantum */}
+                  <div className="my-6 rounded-2xl border border-amber-400/30 bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-rose-500/15 p-4 sm:p-5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 block">Prezzo Bloccato di Lancio</span>
+                    <div className="flex flex-wrap items-baseline gap-2 mt-1">
+                      <span className="text-3xl sm:text-4xl font-extrabold text-white">100€</span>
+                      <span className="text-xs font-bold uppercase text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-md">UNA TANTUM (PER SEMPRE)</span>
+                    </div>
+                    <p className="mt-2 text-xs text-slate-300">
+                      Nessun canone annuale né scadenze: compri una volta ed è tuo a vita per la tua associazione.
+                    </p>
+                  </div>
+
+                  <div className="mt-6 space-y-3.5">
                     <div className="flex items-center gap-3 text-sm text-slate-200">
                       <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#2f7cf6]/30 text-[#68a5ff]">
                         <Check size={14} />
@@ -1455,10 +1478,16 @@ function App() {
                       <span>Tutti i moduli abilitati al 100% per il test</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm text-slate-200">
-                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#2f7cf6]/30 text-[#68a5ff]">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/30 text-emerald-400">
                         <Check size={14} />
                       </div>
-                      <span>Canone trasparente di soli 100€ all'anno per sempre</span>
+                      <span><strong>Solo 100€ una tantum:</strong> licenza a vita, nessun canone futuro</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-slate-200">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/30 text-emerald-400">
+                        <Check size={14} />
+                      </div>
+                      <span>Risparmi centinaia di euro ogni anno rispetto ai soliti abbonamenti</span>
                     </div>
                   </div>
                 </div>
@@ -1620,7 +1649,7 @@ function App() {
       </main>
 
       {/* FOOTER */}
-      <footer id="contatti" className="scroll-mt-16 sm:scroll-mt-20 bg-[#08182c] px-5 py-12 text-white sm:px-8 lg:px-10">
+      <footer id="contatti" className="scroll-mt-24 sm:scroll-mt-28 bg-[#08182c] px-5 py-12 text-white sm:px-8 lg:px-10">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 sm:flex-row sm:items-start">
           <div>
             <a
@@ -1634,7 +1663,7 @@ function App() {
               <span className="font-bold text-lg">Gestionale ASD</span>
             </a>
             <p className="mt-4 max-w-xs text-sm leading-6 text-slate-400">
-              Il software per ASD e palestre veloce, semplice e davvero tuo. Lavora offline e salvi sul tuo Google Drive a 100€/anno.
+              Il software per ASD e palestre veloce, semplice e davvero tuo. Lavora offline e salvi sul tuo Google Drive a 100€ una tantum (licenza a vita).
             </p>
           </div>
 
