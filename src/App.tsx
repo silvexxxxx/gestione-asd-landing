@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AlertCircle,
   ArrowRight,
@@ -248,6 +248,122 @@ const faqs = [
     answer:
       'No, assolutamente nessuno. Il modello è rigorosamente una tantum: acquisti la licenza una sola volta a 100€ e continui a utilizzarla per sempre senza alcun canone periodico, abbonamento o costo nascosto.',
   },
+  {
+    question: 'Gli aggiornamenti futuri del software sono a pagamento?',
+    answer:
+      'No, tutti gli aggiornamenti, le migliorie funzionali e gli adeguamenti normativi (come la sincronizzazione intelligente multi-PC o la Riforma dello Sport) sono gratuiti al 100% e inclusi per sempre nella licenza da 100€ una tantum. Il gestionale si aggiorna automaticamente al primo avvio.',
+  },
+];
+
+interface SoftwareUpdateHighlight {
+  title: string;
+  desc: string;
+}
+
+interface SoftwareUpdate {
+  version: string;
+  date: string;
+  isLatest?: boolean;
+  category: string;
+  title: string;
+  summary: string;
+  highlights: SoftwareUpdateHighlight[];
+}
+
+const softwareUpdates: SoftwareUpdate[] = [
+  {
+    version: '2.8.1',
+    date: 'Novembre 2026',
+    isLatest: true,
+    category: 'Cloud & Sicurezza Multi-PC',
+    title: 'Sincronizzazione Intelligente Multi-Dispositivo',
+    summary:
+      'Lavora su più computer in contemporanea (es. PC palestra e portatile a casa): ora i dati si fondono in automatico senza mai sovrascrivere o cancellare il lavoro fatto sull’altro.',
+    highlights: [
+      {
+        title: 'Fusione Automatica su Google Drive',
+        desc: 'Se registri soci in segreteria e inserisci ricevute da casa, al salvataggio il sistema unisce tutti i dati senza conflitti o perdite accidentali.',
+      },
+      {
+        title: 'Salvataggio Locale al 100% Indipendente',
+        desc: 'Puoi sempre scegliere di salvare solo sul tuo computer ed uscire, lavorando in totale autonomia anche senza connessione internet.',
+      },
+      {
+        title: 'Sincronizzazione Protetta a 1 Clic',
+        desc: 'Rimosse finestre e opzioni complicate: la protezione dai conflitti e dalle disconnessioni accidentali è ora totalmente trasparente.',
+      },
+      {
+        title: 'Subito Attivo e Gratuito a Vita',
+        desc: 'La nuova versione è già pronta e si attiva al prossimo avvio: compresa a vita per tutti i possessori della licenza.',
+      },
+    ],
+  },
+  {
+    version: '2.7.0',
+    date: 'Ottobre 2026',
+    category: 'Cassa & Ricevute',
+    title: 'Ricevute con Calcolo POS e Riforma dello Sport',
+    summary:
+      'Gestione contabile trasparente a prova di verifica fiscale con suddivisione automatica tra cassa contanti, pagamenti con carta e bonifici bancari.',
+    highlights: [
+      {
+        title: 'Numerazione Fiscale Progressiva',
+        desc: 'Emissione automatica ricevute con numerazione univoca a norma di legge e calcolo automatico marca da bollo.',
+      },
+      {
+        title: 'Tracciamento POS & Riconciliazione',
+        desc: 'Separazione immediata degli incassi elettronici con calcolo trasparente delle commissioni bancarie.',
+      },
+      {
+        title: 'Esportazione per il Commercialista',
+        desc: 'Generazione in 1 clic di bilancini ed estratti prima nota ordinati in formato Excel e PDF.',
+      },
+    ],
+  },
+  {
+    version: '2.5.0',
+    date: 'Settembre 2026',
+    category: 'Soci & Visite Mediche',
+    title: 'Semafori Visivi Scadenzario Certificati Medici',
+    summary:
+      'Controllo sanitario e anagrafico a colpo d’occhio per azzerare il rischio di atleti in palestra con visita medica scaduta.',
+    highlights: [
+      {
+        title: 'Semafori Visivi di Scadenza',
+        desc: 'Alert cromatici (verde, giallo, rosso) che evidenziano all’istante i certificati in scadenza entro 30 o 15 giorni.',
+      },
+      {
+        title: 'Scheda Atleta & Storico Completo',
+        desc: 'Riepilogo unico con frequenze ai corsi, quote pagate, certificati allegati e moduli tesseramento firmati.',
+      },
+      {
+        title: 'Stampa Moduli e Privacy GDPR',
+        desc: 'Generazione con dati pre-compilati del modulo di iscrizione socio conforme alle normative vigenti.',
+      },
+    ],
+  },
+  {
+    version: '2.2.0',
+    date: 'Agosto 2026',
+    category: 'Privacy & Backup',
+    title: 'Archiviazione Blindata su Google Drive Personale',
+    summary:
+      'I tuoi dati restano di esclusiva proprietà della tua associazione, al sicuro sul tuo account Google Drive personale e mai su server terzi sconosciuti.',
+    highlights: [
+      {
+        title: 'Zero Server Terzi o Intermediari',
+        desc: 'Il database è protetto dalle chiavi di sicurezza del tuo account Google, garantendo la massima conformità GDPR.',
+      },
+      {
+        title: 'Nessun Riscatto o Canone Cloud',
+        desc: 'I tuoi archivi sono tuoi per sempre. Nessuno potrà mai chiederti soldi extra per accedere o scaricare i tuoi dati.',
+      },
+      {
+        title: 'Cambio PC in 30 Secondi',
+        desc: 'Se cambi o formatti il computer in segreteria, ricolleghi il tuo Drive e il gestionale è subito pronto con tutto lo storico.',
+      },
+    ],
+  },
 ];
 
 const coreModules = [
@@ -285,6 +401,18 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeScreenshot, setActiveScreenshot] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Updates Carousel Ref & Scroll Handler
+  const updatesScrollRef = useRef<HTMLDivElement>(null);
+  const scrollUpdates = (direction: 'left' | 'right') => {
+    if (updatesScrollRef.current) {
+      const cardWidth = 380;
+      updatesScrollRef.current.scrollBy({
+        left: direction === 'left' ? -cardWidth : cardWidth,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   // Counter State rimosso su richiesta
   const handleOpenDemo = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -597,6 +725,16 @@ function App() {
               Schermate
             </a>
             <a
+              href="#aggiornamenti"
+              onClick={(e) => {
+                setMenuOpen(false);
+                scrollToSection(e, 'aggiornamenti');
+              }}
+              className="whitespace-nowrap rounded-lg px-2 py-1.5 text-xs lg:text-sm font-medium tracking-tight text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
+            >
+              Novità
+            </a>
+            <a
               href="#faq"
               onClick={(e) => {
                 setMenuOpen(false);
@@ -649,9 +787,20 @@ function App() {
 
           <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_.95fr] lg:gap-12 lg:px-10">
             <div className="max-w-2xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-rose-500/15 px-4 py-2 text-xs font-bold text-amber-300 shadow-sm shadow-amber-500/10">
-                <Zap size={14} className="text-amber-400 fill-amber-400 shrink-0" />
-                <span>PREZZO BLOCCATO • 100€ UNA TANTUM A VITA (ZERO CANONI)</span>
+              <div className="mb-6 flex flex-wrap items-center gap-2.5">
+                <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-rose-500/15 px-4 py-2 text-xs font-bold text-amber-300 shadow-sm shadow-amber-500/10">
+                  <Zap size={14} className="text-amber-400 fill-amber-400 shrink-0" />
+                  <span>PREZZO BLOCCATO • 100€ UNA TANTUM A VITA (ZERO CANONI)</span>
+                </div>
+                <a
+                  href="#aggiornamenti"
+                  onClick={(e) => scrollToSection(e, 'aggiornamenti')}
+                  className="group inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/20 hover:bg-blue-500/35 px-3.5 py-1.5 text-xs font-semibold text-blue-200 transition shadow-sm cursor-pointer"
+                >
+                  <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Novità v2.8.1: Sincronizzazione Drive Multi-PC</span>
+                  <ArrowRight size={13} className="text-blue-300 transition-transform group-hover:translate-x-0.5" />
+                </a>
               </div>
 
               <h1 className="max-w-xl text-4xl font-bold leading-[1.08] tracking-[-0.035em] sm:text-5xl lg:text-[62px]">
@@ -1335,7 +1484,162 @@ function App() {
           </div>
         </section>
 
-        {/* 8. SEZIONE FAQ (DOMANDE FREQUENTI) */}
+        {/* 8. SEZIONE AGGIORNAMENTI & NOVITÀ DEL SOFTWARE */}
+        <section id="aggiornamenti" className="scroll-mt-24 sm:scroll-mt-28 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 border-b border-slate-100">
+          <div className="mx-auto max-w-7xl">
+            {/* Header Sezione */}
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold text-[#2f7cf6] mb-4">
+                <Sparkles size={14} className="text-[#2f7cf6]" />
+                <span>Miglioramento Continuo Inclusivo</span>
+              </div>
+              <h2 className="section-title">Novità & Aggiornamenti del Software</h2>
+              <p className="section-copy mx-auto">
+                Il gestionale è un progetto in costante evoluzione. Ogni nuova funzione, ottimizzazione tecnica e adeguamento normativo è <strong>già incluso gratis a vita</strong> nella tua licenza da 100€ una tantum.
+              </p>
+            </div>
+
+            {/* Banner Rassicurazione Licenza a Vita */}
+            <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-emerald-500/25 bg-emerald-500/10 p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left shadow-sm">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-md shadow-emerald-500/20">
+                <ShieldCheck size={22} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-bold text-slate-900">
+                  Nessun costo di aggiornamento o canone di manutenzione
+                </h3>
+                <p className="mt-0.5 text-xs text-slate-600">
+                  Quando rilasciamo una nuova versione, il tuo software si aggiorna automaticamente al primo avvio. Non ti chiederemo mai 1€ per ricevere le novità.
+                </p>
+              </div>
+            </div>
+
+            {/* Controlli Scorrimento */}
+            <div className="mt-12 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Ultime Release Rilasciate
+                </span>
+                <span className="hidden sm:inline-flex rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
+                  {softwareUpdates.length} versioni
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => scrollUpdates('left')}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 shadow-sm transition cursor-pointer"
+                  aria-label="Aggiornamento precedente"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollUpdates('right')}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 shadow-sm transition cursor-pointer"
+                  aria-label="Aggiornamento successivo"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Slider / Carousel Container a schede scorrevoli */}
+            <div
+              ref={updatesScrollRef}
+              className="mt-6 flex gap-6 overflow-x-auto pb-6 pt-2 scroll-smooth snap-x snap-mandatory"
+            >
+              {softwareUpdates.map((update) => (
+                <div
+                  key={update.version}
+                  className={`snap-start shrink-0 w-[300px] sm:w-[380px] lg:w-[410px] rounded-2xl border p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 ${
+                    update.isLatest
+                      ? 'border-[#2f7cf6] bg-gradient-to-b from-blue-50/70 via-white to-white shadow-xl shadow-blue-500/10 ring-2 ring-[#2f7cf6]/20'
+                      : 'border-slate-200 bg-white shadow-md shadow-slate-100 hover:border-slate-300'
+                  }`}
+                >
+                  <div>
+                    {/* Header Card: Versione + Data + Badge */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-base font-extrabold text-[#0b1d35]">
+                          v{update.version}
+                        </span>
+                        <span className="text-xs font-medium text-slate-500">
+                          • {update.date}
+                        </span>
+                      </div>
+                      {update.isLatest ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          Ultimo Rilascio
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
+                          {update.category}
+                        </span>
+                      )}
+                    </div>
+
+                    {update.isLatest && (
+                      <span className="mt-2 inline-block text-[11px] font-semibold uppercase tracking-wider text-[#2f7cf6]">
+                        {update.category}
+                      </span>
+                    )}
+
+                    {/* Titolo e Sintesi */}
+                    <h3 className="mt-2 text-lg font-bold text-[#0b1d35] leading-snug">
+                      {update.title}
+                    </h3>
+                    <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      {update.summary}
+                    </p>
+
+                    {/* Elenco Punti di Forza */}
+                    <div className="mt-5 space-y-3 border-t border-slate-100 pt-5">
+                      {update.highlights.map((item, idx) => (
+                        <div key={idx} className="flex items-start gap-2.5">
+                          <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[#2f7cf6]">
+                            <Check size={11} strokeWidth={3} />
+                          </div>
+                          <div className="text-xs leading-relaxed text-slate-700">
+                            <strong className="text-slate-900">{item.title}:</strong> {item.desc}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footer Card */}
+                  <div className="mt-6 border-t border-slate-100 pt-4 flex items-center justify-between text-[11px] font-medium text-slate-500">
+                    <span className="flex items-center gap-1 text-emerald-600 font-semibold">
+                      <CircleCheck size={13} /> Aggiornamento attivo
+                    </span>
+                    <span>100% Gratuito</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer Sezione con Invito alla Community */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl bg-slate-50 p-4 text-center sm:text-left border border-slate-200/80">
+              <div className="flex items-center gap-2 text-xs text-slate-600">
+                <Sparkles size={16} className="text-[#2f7cf6] shrink-0" />
+                <span>Hai un suggerimento o una richiesta per il prossimo rilascio? Chi ha la licenza può richiedere nuove funzioni direttamente!</span>
+              </div>
+              <a
+                href="#richiesta-demo"
+                onClick={(e) => scrollToSection(e, 'richiesta-demo')}
+                className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-[#2f7cf6] hover:text-[#1a62d6] transition cursor-pointer"
+              >
+                <span>Scrivici un consiglio</span>
+                <ArrowRight size={13} />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* 9. SEZIONE FAQ (DOMANDE FREQUENTI) */}
         <section id="faq" className="scroll-mt-24 sm:scroll-mt-28 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
           <div className="mx-auto max-w-4xl">
             <div className="text-center">
